@@ -1,14 +1,3 @@
-cmake_minimum_required(VERSION 3.8)
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}")
-project(example)
-
-find_package(Threads REQUIRED)
-find_package(spdk CONFIG REQUIRED)
-find_package(spdk-dpdk CONFIG REQUIRED)
-find_package(isal CONFIG REQUIRED)
-
-include_directories(${SPDK_INCLUDE_DIR} ${DPDK_INCLUDE_DIR})
-
 # core libraries
 set(SPDK_BLOCKDEV_LIBS
 	SPDK::spdk_bdev_malloc SPDK::spdk_bdev_null
@@ -27,7 +16,7 @@ set(SPDK_SOCK_LIBS SPDK::spdk_sock_posix SPDK::spdk_sock)
 
 add_executable(blob blob.cpp)
 target_link_libraries(blob
-	${Boost_LIBRARIES}
+	-Wl,--no-as-needed
 	${SPDK_BLOCKDEV_LIBS}
 	${SPDK_BLOB_LIBS}
 	${SPDK_ACCEL_LIBS}
@@ -70,6 +59,8 @@ target_link_libraries(blob
 	DPDK::rte_cryptodev
 	DPDK::rte_hash
 	DPDK::rte_rcu
+	DPDK::rte_timer
+	DPDK::rte_meter
 	ISAL::ISAL
 	numa
 	rdmacm
